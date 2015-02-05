@@ -72,7 +72,7 @@ public final class QuestDocAnnotationParser {
     private static final String DESCRIPTION_OF_EVIDENCE_P = "Description of evidence:? ?(.*)";
     
     
-    private static final String NCCN_GUIDELINES_P = "NCCN guidelines";
+    private static final String NCCN_GUIDELINES_P = "NCCN guidelines:?";
     private static final String NCCN_DISEASE_P = "Disease: ?(.+)";
     private static final String NCCN_VERSION_P = "Version: ?(.+)";
     private static final String NCCN_PAGES_P = "Pages: ?(.+)";
