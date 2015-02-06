@@ -481,10 +481,15 @@ angular.module('webappApp')
 
         reader.onload = function(e) {
             var full = x2js.xml_str2json(e.target.result);
-            console.log(full);
             var reportViewDatas = [];
-            for(var k = 0 ;k < full.document.sample.test.variant.length;k++){
-                var annotation = processData(full.document.sample.test.variant[k].allele.transcript);
+            var variants = [];
+            if(angular.isArray(full.document.sample.test.variant)) {
+                variants = full.document.sample.test.variant;
+            }else {
+                variants.push(full.document.sample.test.variant);
+            }
+            for(var k = 0 ;k < variants.length;k++){
+                var annotation = processData(variants[k].allele.transcript);
                 var relevantCancerType = {};
                 for(var key in annotation) {
                     annotation[key] = formatDatum(annotation[key], key);
@@ -512,14 +517,10 @@ angular.module('webappApp')
                 }else {
                     relevantCancerType = null;
                 }
-                console.log(annotation.hgnc_symbol, annotation.hgvs_p_short, full.document.sample.diagnosis, relevantCancerType, annotation);
                 var reportParams = ReportDataService.init(annotation.hgnc_symbol, annotation.hgvs_p_short, full.document.sample.diagnosis, relevantCancerType, annotation);
-    //                $scope.regularViewData = regularViewData($scope.annotation);
                 reportViewDatas.push(reportViewData(reportParams));
-                
             }
             $scope.reportViewDatas = reportViewDatas;
-            console.log($scope.reportViewDatas);
             $scope.isXML = true;
             $scope.$apply();
         };
