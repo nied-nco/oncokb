@@ -481,38 +481,45 @@ angular.module('webappApp')
 
         reader.onload = function(e) {
             var full = x2js.xml_str2json(e.target.result);
-            var annotation = processData(full.document.sample.test.variant.allele.transcript);
-            var relevantCancerType = {};
-            for(var key in annotation) {
-                annotation[key] = formatDatum(annotation[key], key);
-            }
-            if(annotation.cancer_type) {
-                var relevantCancerType = [];
-                for(var i=0, cancerTypeL = annotation.cancer_type.length; i < cancerTypeL; i++) {
-                    var _cancerType = annotation.cancer_type[i];
-                    if(_cancerType.$relevant_to_patient_disease.toLowerCase() === 'yes') {
-                        relevantCancerType.push(_cancerType);
-                    }
+            console.log(full);
+            var reportViewDatas = [];
+            for(var k = 0 ;k < full.document.sample.test.variant.length;k++){
+                var annotation = processData(full.document.sample.test.variant[k].allele.transcript);
+                var relevantCancerType = {};
+                for(var key in annotation) {
+                    annotation[key] = formatDatum(annotation[key], key);
                 }
-                if(relevantCancerType.length > 1) {
-                    var obj1 = relevantCancerType[0];
-
-                    for(var i=1, relevantL=relevantCancerType.length; i < relevantL; i++) {
-                        obj1 = DeepMerge.init(obj1, relevantCancerType[i], obj1.$type, relevantCancerType[i].$type);
+                if(annotation.cancer_type) {
+                    var relevantCancerType = [];
+                    for(var i=0, cancerTypeL = annotation.cancer_type.length; i < cancerTypeL; i++) {
+                        var _cancerType = annotation.cancer_type[i];
+                        if(_cancerType.$relevant_to_patient_disease.toLowerCase() === 'yes') {
+                            relevantCancerType.push(_cancerType);
+                        }
                     }
-                    relevantCancerType = obj1;
-                }else if(relevantCancerType.length === 1){
-                    relevantCancerType = relevantCancerType[0];
+                    if(relevantCancerType.length > 1) {
+                        var obj1 = relevantCancerType[0];
+
+                        for(var i=1, relevantL=relevantCancerType.length; i < relevantL; i++) {
+                            obj1 = DeepMerge.init(obj1, relevantCancerType[i], obj1.$type, relevantCancerType[i].$type);
+                        }
+                        relevantCancerType = obj1;
+                    }else if(relevantCancerType.length === 1){
+                        relevantCancerType = relevantCancerType[0];
+                    }else {
+                        relevantCancerType = null;
+                    }
                 }else {
                     relevantCancerType = null;
                 }
-            }else {
-                relevantCancerType = null;
+                console.log(annotation.hgnc_symbol, annotation.hgvs_p_short, full.document.sample.diagnosis, relevantCancerType, annotation);
+                var reportParams = ReportDataService.init(annotation.hgnc_symbol, annotation.hgvs_p_short, full.document.sample.diagnosis, relevantCancerType, annotation);
+    //                $scope.regularViewData = regularViewData($scope.annotation);
+                reportViewDatas.push(reportViewData(reportParams));
+                
             }
-
-            var reportParams = ReportDataService.init(annotation.hgnc_symbol, annotation.hgvs_p_short, full.document.sample.diagnosis, relevantCancerType, annotation);
-//                $scope.regularViewData = regularViewData($scope.annotation);
-            $scope.reportViewData = reportViewData(reportParams);
+            $scope.reportViewDatas = reportViewDatas;
+            console.log($scope.reportViewDatas);
             $scope.isXML = true;
             $scope.$apply();
         };
