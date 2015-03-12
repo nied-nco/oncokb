@@ -503,6 +503,13 @@ angular.module('webappApp')
                         }
                     }
                     if(relevantCancerType.length > 1) {
+                        relevantCancerType.sort(function(e){
+                            if(e.$type.toString().toLowerCase() === "all tumors"){
+                                return -1;
+                            }else{
+                                return 1;
+                            }
+                        });
                         var obj1 = relevantCancerType[0];
 
                         for(var i=1, relevantL=relevantCancerType.length; i < relevantL; i++) {
