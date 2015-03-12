@@ -263,8 +263,15 @@ angular.module('webappApp')
                         }
                     }
                     if(relevantCancerType.length > 1) {
+                        relevantCancerType.sort(function(e){
+                            if(e.$type.toString().toLowerCase() === "all tumors"){
+                                return -1;
+                            }else{
+                                return 1;
+                            }
+                        });
                         var obj1 = relevantCancerType[0];
-                        
+                        console.log(relevantCancerType);
                         for(var i=1, relevantL=relevantCancerType.length; i < relevantL; i++) {
                             obj1 = DeepMerge.init(obj1, relevantCancerType[i], obj1.$type, relevantCancerType[i].$type);
                         }

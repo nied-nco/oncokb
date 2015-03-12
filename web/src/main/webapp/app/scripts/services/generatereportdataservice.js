@@ -550,7 +550,7 @@ angular.module('webappApp')
             value = [];
             key = 'MUTATION PREVALENCE';
             object = {};
-            object[key] = addRecord({'array': ['Cancer type', 'value'], 'object':'description'}, cancerTypeInfo.prevalence.description, value);
+            object[key] = addRecord({'array': ['value'], 'object':'description'}, cancerTypeInfo.prevalence.description, value);
             additionalInfo.push(object);
         }
 
