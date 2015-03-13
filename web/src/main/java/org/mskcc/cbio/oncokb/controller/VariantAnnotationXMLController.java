@@ -434,13 +434,11 @@ public class VariantAnnotationXMLController {
                         // if there is no FDA or NCCN drugs for the gene at all
                         sb.append("There are no FDA approved or NCCN-compendium listed treatments specifically for patients with ")
                                 .append(queryTumorType)
-                                .append(" harboring the ")
+                                .append(" harboring ")
                                 .append(queryAlteration)
                                 .append(". ");
                     }
                 }
-                    
-                sb.append("Please refer to the clinical trials section. ");
             }
         }
 
